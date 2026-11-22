@@ -1,0 +1,22 @@
+# Render Blueprint. Not deployed or tested from this environment; see README "Deployment".
+services:
+  - type: web
+    name: civicflow-ai
+    runtime: python
+    plan: starter            # persistent disks need a paid plan
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_PATH
+        value: /var/data/civicflow.db
+      - key: UPLOAD_DIR
+        value: /var/data/uploads
+      - key: AI_API_KEY
+        sync: false          # set in the Render dashboard; optional
+      - key: AI_MODEL
+        value: gpt-4o-mini
+    disk:
+      name: civicflow-data
+      mountPath: /var/data
+      sizeGB: 1

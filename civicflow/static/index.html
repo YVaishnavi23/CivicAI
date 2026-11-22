@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CivicFlow AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Telugu:wght@400;600&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#report" aria-label="CivicFlow AI">CivicFlow <span>AI</span></a>
+  <nav class="tabs" aria-label="Pages">
+    <button type="button" class="tab" data-view="report" data-i18n="navReport">Report an issue</button>
+    <button type="button" class="tab" data-view="track" data-i18n="navTrack">Track report</button>
+    <button type="button" class="tab" data-view="authority" data-i18n="navAuthority">Authority desk</button>
+  </nav>
+  <label class="lang">
+    <span class="sr-only" data-i18n="langLabel">Language</span>
+    <select id="lang">
+      <option value="en">English</option>
+      <option value="te">తెలుగు</option>
+      <option value="hi">हिन्दी</option>
+    </select>
+  </label>
+</header>
+
+<main>
+  <!-- Report an issue -->
+  <section id="view-report" class="view" hidden>
+    <div class="page-head">
+      <h1 data-i18n="reportTitle">Report a problem on your street</h1>
+      <p data-i18n="reportIntro">Describe a road, waste, drainage, lighting or safety problem. CivicFlow organises it and shows a team why it matters.</p>
+    </div>
+    <div class="cols">
+      <div>
+        <form id="report-form" class="panel" novalidate>
+          <div class="field">
+            <label for="f-location" data-i18n="locLabel">Where is it?</label>
+            <input id="f-location" name="location" maxlength="200" autocomplete="off" data-i18n-placeholder="locPlaceholder" placeholder="Street, landmark, neighbourhood">
+          </div>
+          <div class="field">
+            <label for="f-description" data-i18n="descLabel">What is the problem?</label>
+            <textarea id="f-description" name="description" rows="6" maxlength="2000" data-i18n-placeholder="descPlaceholder" placeholder="What you see, how long it has been there, who is affected"></textarea>
+          </div>
+          <div class="field">
+            <label for="f-photo"><span data-i18n="photoLabel">Photo (optional)</span></label>
+            <input id="f-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp">
+            <p class="hint" data-i18n="photoHint">JPG, PNG or WEBP, up to 3 MB. The photo is stored with your report but is not analysed.</p>
+          </div>
+          <p class="hint privacy" data-i18n="privacy">Do not include names, phone numbers or other personal details.</p>
+          <div id="report-error" class="error" role="alert" hidden></div>
+          <button type="submit" class="btn primary" id="report-submit" data-i18n="submit">Submit report</button>
+        </form>
+
+        <div id="confirmation" class="panel confirmation" hidden aria-live="polite"></div>
+      </div>
+
+      <aside class="side">
+        <div class="boundary" role="note">
+          <h2 data-i18n="boundaryTitle">What this prototype is not</h2>
+          <p data-i18n="boundaryText">Your report is not sent to any government department, and nothing here is an official decision. Priority scores are illustrative. For emergencies, contact local emergency services.</p>
+        </div>
+        <div class="panel">
+          <h2 data-i18n="stepsTitle">What happens next</h2>
+          <ol class="steps">
+            <li><strong data-i18n="step1Title">You report</strong><span data-i18n="step1Text">You get a reference ID to track your own report.</span></li>
+            <li><strong data-i18n="step2Title">AI organises it</strong><span data-i18n="step2Text">Category, severity and a first action are suggested. If no AI is configured, labelled rules are used instead.</span></li>
+            <li><strong data-i18n="step3Title">A team prioritises</strong><span data-i18n="step3Text">Possibly related reports are grouped and the score is explained in plain language.</span></li>
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Track report -->
+  <section id="view-track" class="view" hidden>
+    <div class="page-head">
+      <h1 data-i18n="trackTitle">Track your report</h1>
+      <p data-i18n="trackIntro">Enter the reference ID you received when you submitted.</p>
+    </div>
+    <form id="track-form" class="inline-form" novalidate>
+      <label class="sr-only" for="t-id" data-i18n="refLabel">Reference ID</label>
+      <input id="t-id" name="ticket" autocomplete="off" spellcheck="false" placeholder="CF-XXXXXXXX" maxlength="20">
+      <button type="submit" class="btn primary" data-i18n="trackBtn">Find report</button>
+    </form>
+    <div id="track-error" class="error" role="alert" hidden></div>
+    <div id="track-result" aria-live="polite"></div>
+  </section>
+
+  <!-- Authority desk -->
+  <section id="view-authority" class="view" hidden>
+    <div class="page-head">
+      <h1 data-i18n="authTitle">Authority desk</h1>
+      <p data-i18n="authIntro">Review incoming reports, see why each is ranked where it is, and update its status.</p>
+    </div>
+    <div class="boundary" role="note"><p data-i18n="openDesk">Simulated desk for demonstration. It has no login, so do not use it with real citizen data.</p></div>
+
+    <div class="demo-bar">
+      <div>
+        <strong data-i18n="demoTitle">Demo data</strong>
+        <span data-i18n="demoNote">Sample reports are marked DEMO and are kept apart from real submissions.</span>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn" id="demo-seed" data-i18n="loadDemo">Load demo scenario</button>
+        <button type="button" class="btn quiet" id="demo-clear" data-i18n="clearDemo">Clear demo data</button>
+      </div>
+    </div>
+
+    <dl class="kpis" id="kpis"></dl>
+
+    <div class="filters">
+      <label>
+        <span data-i18n="filterPriority">Priority</span>
+        <select id="flt-priority"></select>
+      </label>
+      <label>
+        <span data-i18n="filterStatus">Status</span>
+        <select id="flt-status"></select>
+      </label>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <div id="queue-error" class="error" role="alert" hidden></div>
+    <div id="queue"></div>
+  </section>
+</main>
+
+<footer class="foot"><p data-i18n="footer">CivicFlow AI is a local prototype. Reports are not forwarded to any authority.</p></footer>
+<script src="/static/i18n.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
